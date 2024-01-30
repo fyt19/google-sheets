@@ -1,0 +1,23 @@
+function sheetsMailer() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Raporlar");
+  var statusCodeValues = sheet.getRange("C:C").getValues();
+
+  // Determine the last row with data
+  var lastRowWithData = sheet.getLastRow();
+
+  for (var i = 0; i < lastRowWithData; i++) {
+    if (statusCodeValues[i][0] == 404) {
+      // Fetch the email address
+      var emailRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Mailler").getRange("B2");
+      var emailAddress = emailRange.getValue(); // Use getValue() for a single cell
+
+      // Send Alert Email.
+      var message = 'URLlerinizden bir tanesi 404 hatasi vermektedir. Lütfen https://docs.google.com/spreadsheets/d/1W-P4Y3Iwfrdc2Mjnk3MFkSi4qHlmera4pdblL34Yoto/edit?usp=sharing kontrol ediniz.'
+      var subject = '404 Hatası Veren URL Bulunmaktadır. ';
+      MailApp.sendEmail(emailAddress, subject, message);
+      
+      // Exit after sending the email
+      break;
+    }
+  }
+}
